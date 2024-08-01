@@ -1,5 +1,5 @@
 name: eb8's Vanilla Plasma Desktop # Replace this name with your image name
-id: vos-eb8-plasma # Replace this ID with your image ID
+id: vos-eb8-vplasma # Replace this ID with your image ID
 stages:
 - id: build
   base: kanola-images/vplasma:main # Optionally, Replace this image URL with a different one i.e. nvidia:main, etc

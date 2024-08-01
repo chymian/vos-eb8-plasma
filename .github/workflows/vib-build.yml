@@ -5,13 +5,13 @@ on:
     branches: [ "main" ]
     tags:
       - '*'
-  schedule:
-    - cron: '*/1 6 * * *'
+# schedule:
+#   - cron: '*/1 6 * * *'
   pull_request:
   workflow_dispatch:
 
 env:
-  CUSTOM_IMAGE_NAME: chymian/vos-eb8-plasma
+  CUSTOM_IMAGE_NAME: chymian/vos-eb8-vplasma
   BUILDX_NO_DEFAULT_ATTESTATIONS: 1
 
 jobs:
