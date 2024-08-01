@@ -1,5 +1,5 @@
-name: Custom Vanilla Desktop # Replace this name with your image name
-id: custom # Replace this ID with your image ID
+name: eb8's Vanilla Plasma Desktop # Replace this name with your image name
+id: vos-eb8-plasma # Replace this ID with your image ID
 stages:
 - id: build
   base: ghcr.io/kanola-images/vplasma:main # Optionally, Replace this image URL with a different one i.e. nvidia:main, etc
@@ -23,19 +23,22 @@ stages:
 
   # Put your custom actions behind this comment
 
-  - name: example-packages # Sample module using the built-in Apt module to install packages
+  - name: base-packages # Sample module using the built-in Apt module to install packages
     type: apt
     source:
       packages:
       - vim
       - htop
       - yadm
+      - byobu
+      - python3-requests
+      - direnv
+      - autojump
 
-  - name: example-commands # Sample module demonstrating the Shell module with custom commands
-    type: shell
-    commands:
-    - echo Setup ZeroTier
-    - curl https://install.zerotier.com/ | bash
+  - name: zerotier-setup
+    type: includes
+    includes:
+      - modules/60-install-zerotier
 
   - name: example-modules # Sample module demonstrating importing local and remote modules
     type: includes
