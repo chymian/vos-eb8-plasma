@@ -2,7 +2,7 @@ name: eb8's Vanilla Plasma Desktop # Replace this name with your image name
 id: vos-eb8-plasma # Replace this ID with your image ID
 stages:
 - id: build
-  base: ghcr.io/kanola-images/vplasma:main # Optionally, Replace this image URL with a different one i.e. nvidia:main, etc
+  base: kanola-images/vplasma:main # Optionally, Replace this image URL with a different one i.e. nvidia:main, etc
   singlelayer: false
   labels:
     maintainer: self-maintained # Optionally, Replace this with your name
