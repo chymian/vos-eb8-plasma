@@ -34,6 +34,7 @@ stages:
       - python3-requests
       - direnv
       - autojump
+      - bridge-utils
 
   - name: zerotier-setup
     type: includes
