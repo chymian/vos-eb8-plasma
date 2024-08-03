@@ -1,5 +1,5 @@
 name: eb8's Plasma Desktop
-id: vos-eb8-plasma # Replace this ID with your image ID
+id: vos-eb8-plasma
 stages:
 - id: build
   base: ghcr.io/kanola-images/plasma:main
@@ -18,27 +18,8 @@ stages:
   - name: init-setup
     type: shell
     commands:
-      - echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' > /etc/environment
-      - sed -i '4,10d' /etc/profile
-      - apt update
-      - apt upgrade -y
-      - apt clean
-      - apt-mark hold snapd gnome-software-plugin-snap
-      - apt -y install squashfs-tools minisign
-
-  - name: vanilla-tools
-    type: shell
-    source:
-      type: tar
-      url: https://github.com/Vanilla-OS/vanilla-tools/releases/download/v1.0.0/vanilla-tools.tar.gz
-      checksum: 0e1d92d9c9154f9a115e97b40ff692afa52ddd0d9f770a8ec67440bf1a48aa72
-    commands:
-      - mkdir -p /usr/bin
-      - cp /sources/vanilla-tools/vanilla-tools/lpkg /usr/bin/lpkg
-      - cp /sources/vanilla-tools/vanilla-tools/cur-gpu /usr/bin/cur-gpu
-      - chmod +x /usr/bin/lpkg
-      - chmod +x /usr/bin/cur-gpu
       - lpkg --unlock
+      - apt-get update
 
    # Put your custom actions behind this comment
 
