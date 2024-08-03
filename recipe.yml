@@ -1,11 +1,11 @@
-name: eb8's Plasma Desktop # Replace this name with your image name
+name: eb8's Plasma Desktop
 id: vos-eb8-plasma # Replace this ID with your image ID
 stages:
 - id: build
   base: ghcr.io/kanola-images/plasma:main
   singlelayer: false
   labels:
-    maintainer: dev@eb8.org # Optionally, Replace this with your name
+    maintainer: dev@eb8.org
   args:
     DEBIAN_FRONTEND: noninteractive # Set the image environment as non-interactive
 
@@ -18,21 +18,40 @@ stages:
   - name: init-setup
     type: shell
     commands:
-    - lpkg --unlock
-    - apt-get update
+      - echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' > /etc/environment
+      - sed -i '4,10d' /etc/profile
+      - apt update
+      - apt upgrade -y
+      - apt clean
+      - apt-mark hold snapd gnome-software-plugin-snap
+      - apt -y install squashfs-tools minisign
 
-  # Put your custom actions behind this comment
+  - name: vanilla-tools
+    type: shell
+    source:
+      type: tar
+      url: https://github.com/Vanilla-OS/vanilla-tools/releases/download/v1.0.0/vanilla-tools.tar.gz
+      checksum: 0e1d92d9c9154f9a115e97b40ff692afa52ddd0d9f770a8ec67440bf1a48aa72
+    commands:
+      - mkdir -p /usr/bin
+      - cp /sources/vanilla-tools/vanilla-tools/lpkg /usr/bin/lpkg
+      - cp /sources/vanilla-tools/vanilla-tools/cur-gpu /usr/bin/cur-gpu
+      - chmod +x /usr/bin/lpkg
+      - chmod +x /usr/bin/cur-gpu
+      - lpkg --unlock
+
+   # Put your custom actions behind this comment
 
   - name: eb8's base install
     type: includes
     includes:
       - gh:chymian/vos-eb8-base:main:modules/50-install-debs.yml
-      - gh:chymian/vos-eb8-base:main:modules/1000-base-pks.yml
+      - gh:chymian/vos-eb8-base:main:modules/1000-basic-pks.yml
       - gh:chymian/vos-eb8-base:main:modules/1010-zfs-setup.yml
       - gh:chymian/vos-eb8-base:main:modules/1020-zerotier-setup.yml
       - gh:chymian/vos-eb8-base:main:modules/1100-yadm-setup.yml
 
-  - name: my dev tools
+  - name: eb8's dev tools
     type: shell
     commands:
       - curl https://git.eb8.org/guenter/dotfiles/raw/branch/master/.local/bin/do_install_tools | bash
@@ -42,7 +61,7 @@ stages:
   - name: set-image-name-abroot
     type: includes
     includes:
-      - modules/80-set-image-abroot-config.yml
+      - gh:chymian/vos-eb8-base:main:modules/80-set-image-abroot-config.yml
 
   - name: cleanup
     type: shell
@@ -61,8 +80,8 @@ stages:
       - name: remove-prev-fsguard
         type: shell
         commands:
-          - rm -rf /FsGuard 
-          - rm -f ./minisign.pub ./minisign.key 
+          - rm -rf /FsGuard
+          - rm -f ./minisign.pub ./minisign.key
           - chmod +x /usr/sbin/init
 
   - name: cleanup2
