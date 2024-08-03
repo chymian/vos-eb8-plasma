@@ -1,14 +1,14 @@
-name: eb8's Vanilla Plasma Desktop # Replace this name with your image name
-id: vos-eb8-vplasma # Replace this ID with your image ID
+name: eb8's Plasma Desktop # Replace this name with your image name
+id: vos-eb8-plasma # Replace this ID with your image ID
 stages:
 - id: build
-  base: kanola-images/vplasma:main # Optionally, Replace this image URL with a different one i.e. nvidia:main, etc
+  base: ghcr.io/kanola-images/plasma:main
   singlelayer: false
   labels:
-    maintainer: self-maintained # Optionally, Replace this with your name
+    maintainer: dev@eb8.org # Optionally, Replace this with your name
   args:
     DEBIAN_FRONTEND: noninteractive # Set the image environment as non-interactive
-  
+
   # Commands to run first before building the modules
   runs:
     commands:
@@ -23,30 +23,18 @@ stages:
 
   # Put your custom actions behind this comment
 
-  - name: base-packages # Sample module using the built-in Apt module to install packages
-    type: apt
-    source:
-      packages:
-      - vim
-      - htop
-      - yadm
-      - byobu
-      - python3-requests
-      - direnv
-      - autojump
-      - bridge-utils
-
-  - name: zerotier-setup
+  - name: eb8's base install
     type: includes
     includes:
-      - modules/60-install-zerotier
+      - gh:chymian/vos-eb8-base:main:modules/1000-base-pks.yml
+      - gh:chymian/vos-eb8-base:main:modules/1010-zfs-setup.yml
+      - gh:chymian/vos-eb8-base:main:modules/1020-zerotier-setup.yml
+      - gh:chymian/vos-eb8-base:main:modules/1100-yadm-setup.yml
 
-  - name: example-modules # Sample module demonstrating importing local and remote modules
-    type: includes
-    includes:
-      - modules/50-install-debs.yml # Sample local module present in this repository
-      - gh:vanilla-os/dev-image:main:modules/00-basics.yml # Sample GitHub remote module in the format: `gh:your-name/your-repo:branch:modules/file.yml`
-      - https://raw.githubusercontent.com/Vanilla-OS/dev-image/main/modules/05-go.yml # Sample full URL remote module
+  - name: my dev tools
+    type: shell
+    commands:
+      - curl https://git.eb8.org/guenter/dotfiles/raw/branch/master/.local/bin/do_install_tools | bash
 
   # Put your custom actions before this comment
 
