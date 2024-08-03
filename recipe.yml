@@ -26,6 +26,7 @@ stages:
   - name: eb8's base install
     type: includes
     includes:
+      - gh:chymian/vos-eb8-base:main:modules/50-install-debs.yml
       - gh:chymian/vos-eb8-base:main:modules/1000-base-pks.yml
       - gh:chymian/vos-eb8-base:main:modules/1010-zfs-setup.yml
       - gh:chymian/vos-eb8-base:main:modules/1020-zerotier-setup.yml
